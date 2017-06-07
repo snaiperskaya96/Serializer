@@ -6,6 +6,7 @@
 #define LIBKEY_SBUFFER_H
 
 #include <string>
+#include <cstring>
 #include <cstdlib>
 #include "Serializer.h"
 
@@ -69,10 +70,11 @@ struct SBuffer : public SAbstractBuffer {
 
 struct SCompressedBuffer : public SAbstractBuffer
 {
-    size_t OriginalSize = 0;
+    size_t OriginalSize;
 
     SCompressedBuffer(size_t NewSize)
     {
+        OriginalSize = 0;
         Buffer = realloc(Buffer, NewSize + sizeof(size_t));
         BufferSize = NewSize;
     }
