@@ -6,10 +6,11 @@
 #define SERIALIZER_TEST_H
 
 #include <gtest/gtest.h>
+#include <Compressor.h>
 #include "Serialization.h"
 
-int main(int argc, char **argv) {
-
+int main(int argc, char **argv)
+{
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 

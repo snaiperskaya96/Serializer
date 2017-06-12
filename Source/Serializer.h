@@ -8,8 +8,6 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
-#include <archive_entry.h>
-#include <archive.h>
 
 class Serializer {
 public:
@@ -17,9 +15,11 @@ public:
 
     static void Deserialize(struct SBuffer& Buffer, void* Destination, size_t Size);
 
-    static struct SCompressedBuffer Compress(struct SBuffer& Buffer, la_ssize_t& ErrorCode, std::string* ErrorMessage);
+#ifdef WITH_ZLIB
+    static struct SCompressedBuffer Compress(struct SBuffer& Buffer);
 
-    static struct SBuffer Decompress(SCompressedBuffer &Buffer, la_ssize_t &ErrorCode, std::string *ErrorMessage);
+    static struct SBuffer Decompress(SCompressedBuffer &Buffer);
+#endif
 
 protected:
     static void ReserveSpace(struct SBuffer& Buffer, size_t Size);

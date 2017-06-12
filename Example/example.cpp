@@ -19,14 +19,18 @@ int main()
     const char* D = "Left!";
     Serializer::Serialize(Buffer, (void*) D, 5);
 
-    std::cout << "Serialized Buffer:" << std::endl << std::string((char*) Buffer.Buffer, Buffer.BufferSize) << std::endl;
+    std::cout << "Serialized Buffer:" << std::endl << std::string((char*) Buffer.Buffer, Buffer.SerializationIndex) << std::endl;
 
-    la_ssize_t ErrorNo;
-    std::string ErrorMessage;
-    SCompressedBuffer CompressedBuffer = Serializer::Compress(Buffer, ErrorNo, &ErrorMessage);
-
-    // Doesn't really have enough data to be properly compressed, as a result it will be bigger than the original buffer
+#ifdef WITH_ZLIB
+    SCompressedBuffer CompressedBuffer = Serializer::Compress(Buffer);
     std::cout << "Compressed Buffer:" << std::endl << std::string((char*) CompressedBuffer.Buffer, CompressedBuffer.BufferSize) << std::endl;
+    SBuffer DecompressedBuffer = Serializer::Decompress(CompressedBuffer);
+    std::cout << "Decompressed Buffer:" << std::endl << std::string((char*) DecompressedBuffer.Buffer, DecompressedBuffer.BufferSize) << std::endl;
+
+    FILE* File = fopen("/tmp/compressed.gzip", "wb");
+    fwrite(CompressedBuffer.Buffer, CompressedBuffer.BufferSize, 1, File);
+    fclose(File);
+#endif
 
     // If we keep the same serialization order,
     // the data will be correct
@@ -44,5 +48,4 @@ int main()
     std::cout << " B |  " << B << " | " << NewB << " |" <<  std::endl;
     std::cout << " C |  " << C << " | " << NewC << " |" <<  std::endl;
     std::cout << " D |  " << D << " | " << NewD << " |" <<  std::endl;
-
 }
